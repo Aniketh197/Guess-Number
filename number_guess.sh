@@ -15,7 +15,7 @@ if[[ -x $USERNAME_AVAIL ]]
     INSERT_USER=$($PSQL "INSERT INTO users(username) VALUES('$USERNAME')")
     echo "Welcome, $USERNAME! It looks like this is your first time here."
   else
-    echo "Welcome back, $USERNAME! You have played <games_played> games, and your best game took <best_game> guesses."
+    echo "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
 fi
 
 RANDOM_NUM=$((1 + $RANDOM % 1000))
