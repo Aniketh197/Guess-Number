@@ -1,16 +1,16 @@
 #!/bin/bash
 
-PSQL="psql --username=freecodecamp --dbname=<database_name> -t --no-align -c"
+PSQL="psql --username=freecodecamp --dbname=number_guess -t --no-align -c"
 
 echo "Enter your username:"
 read USERNAME
 
 USERNAME_AVAIL=$($PSQL "SELECT username FROM users where username='$USERNAME'")
 GAMES_PLAYED=$($PSQL "SELECT count(*) FROM users INNER JOIN games USING(user_id) WHERE username='$USERNAME'")
-BEST_GAME=$($PSQL "SELECT min(guess) FROM users INNER JOIN games USING(user_id) WHERE username='$USERNAME'")
+BEST_GAME=$($PSQL "SELECT min(guesses) FROM users INNER JOIN games USING(user_id) WHERE username='$USERNAME'")
 
 
-if[[ -x $USERNAME_AVAIL ]]
+if [[ -z $USERNAME_AVAIL ]]
   then
     INSERT_USER=$($PSQL "INSERT INTO users(username) VALUES('$USERNAME')")
     echo "Welcome, $USERNAME! It looks like this is your first time here."
@@ -24,18 +24,18 @@ echo "Guess the secret number between 1 and 1000:"
 
 while read NUM
 do
-  if[[ ! $NUM =~ ^[0-9]+$ ]]
+  if [[ ! $NUM =~ ^[0-9]+$ ]]
   then
     echo "That is not an integer, guess again:"
   else
-    if[[ $NUM -eq $RANDOM_NUM ]]
+    if [[ $NUM -eq $RANDOM_NUM ]]
     then
       break;
     else
-      if[[ $NUM -gt $RANDOM_NUM ]]
+      if [[ $NUM -gt $RANDOM_NUM ]]
       then
         echo "It's lower than that, guess again:"
-        elif[[ $NUM -lt $RANDOM_NUM ]]
+        elif [[ $NUM -lt $RANDOM_NUM ]]
         then
           echo "It's higher than that, guess again:"
       fi
@@ -45,7 +45,7 @@ do
 done
 
 
-if[[ $GUESS == 1 ]]
+if [[ $GUESS == 1 ]]
 then
   echo "You guessed it in $GUESS tries. The secret number was $RANDOM_NUM. Nice job!"
 else
